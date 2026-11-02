@@ -1,0 +1,14 @@
+# Generated website output; rebuilt by build.py and GitHub Actions
+/site/
+
+# Python temporary files
+__pycache__/
+*.pyc
+
+# Local environments
+.venv/
+venv/
+
+# Operating system files
+.DS_Store
+Thumbs.db

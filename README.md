@@ -1,6 +1,6 @@
 # Divy — public journey portfolio
 
-A real static portfolio inspired by the **four uploaded .dc.html reference pages**. Uses the same JetBrains Mono + IBM Plex Sans terminal feel, deep near-black navy surfaces, amber `#FFB454`, restrained borders, status panel, numbered sections, and case-file format. The generated `site/` folder works on GitHub Pages, Netlify, or Vercel (static hosting). No React, server, database, account, or monthly CMS subscription needed.
+A static portfolio inspired by the **four uploaded .dc.html reference pages**. The source files are `build.py`, `assets/`, and `posts/`; `site/` is generated output and should not be edited or committed. No React, server, database, account, or monthly CMS subscription needed.
 
 ## Open the website
 
@@ -13,7 +13,7 @@ Run `python build.py`, then open `site/index.html` in a browser. Pages work loca
 3. Change `title`, `date` (YYYY-MM-DD), `category`, and `summary` at the top. Set **`draft: false`** once ready to publish.
 4. Write your article under the second `---` using Markdown: `## Heading`, `**bold**`, `- list`, fenced triple-backtick code, and `[link](https://...)`.
 5. Run **`python build.py`** from this folder. It rebuilds the homepage latest entries, journal index, and individual article pages automatically. Posts are sorted newest-first.
-6. Push the rebuilt `site/` folder to your website host. If you deploy the whole repository with Vercel or Netlify, configure the output/publish directory as **`site`** and build command as **`python build.py`**. For GitHub Pages, use the included Actions workflow (push repo to GitHub; Settings → Pages → Source: GitHub Actions).
+6. Push your source changes. The GitHub Actions workflow at `.github/workflows/main.yml` builds `site/` and deploys it automatically. For Vercel or Netlify, configure the output/publish directory as **`site`** and build command as **`python build.py`**.
 
 **Example:** `posts/2026-10-26-learning-sysmon.md` becomes `site/journal/2026-10-26-learning-sysmon.html`. You do **not** need to edit links in the homepage manually.
 
@@ -39,7 +39,7 @@ There's no private web admin login, comments system, database, rich text editor,
 
 ## Deploy on GitHub Pages (free)
 
-1. Create a GitHub repository and upload all files **including** `.github/workflows/pages.yml`.
+1. Push the source files, including `.github/workflows/main.yml`.
 2. Open repository **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 3. Each time you edit a post in GitHub and commit to `main`, the workflow automatically runs `python build.py` and deploys `site/`.
 4. Your public site URL will be shown in the workflow / Pages settings.

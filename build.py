@@ -6,7 +6,9 @@ import re, html, shutil
 ROOT=Path(__file__).parent
 POSTS=ROOT/'posts'
 OUT=ROOT/'site'
-OUT.mkdir(exist_ok=True)
+if OUT.exists():
+    shutil.rmtree(OUT)
+OUT.mkdir()
 
 def esc(s): return html.escape(str(s), quote=True)
 def slug(s): return re.sub(r'[^a-z0-9]+','-',s.lower()).strip('-')
@@ -69,7 +71,7 @@ def load_posts():
 nav=[('index.html','home'),('journal.html','journal'),('projects.html','projects'),('detections.html','detections'),('about.html','about')]
 def layout(title,body,root='',active=''):
  links=''.join(f'<a class="{"active" if label==active else ""}" href="{root+href}">{label}</a>' for href,label in nav)
- return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0B0F14"><meta name="description" content="Divy Brahmbhatt — cybersecurity, software projects, and a public learning journal."><title>{esc(title)} · Divy Brahmbhatt</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">><link rel="stylesheet" href="{root}assets/style.css"></head><body><header class="site-header"><div class="container nav"><a class="brand" href="{root}index.html">divy@portfolio:<span>~$</span></a><nav aria-label="Main navigation">{links}</nav></div></header><main>{body}</main><footer class="footer"><div class="container footer-inner"><span>© {date.today().year} Divy Brahmbhatt</span><span>build in public · <a href="{root}journal.html">read the journey →</a></span></div></footer></body></html>'''
+ return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0B0F14"><meta name="description" content="Divy Brahmbhatt — cybersecurity, software projects, and a public learning journal."><title>{esc(title)} · Divy Brahmbhatt</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="{root}assets/style.css"></head><body><header class="site-header"><div class="container nav"><a class="brand" href="{root}index.html">divy@portfolio:<span>~$</span></a><nav aria-label="Main navigation">{links}</nav></div></header><main>{body}</main><footer class="footer"><div class="container footer-inner"><span>© {date.today().year} Divy Brahmbhatt</span><span>build in public · <a href="{root}journal.html">read the journey →</a></span></div></footer><script type="module" src="{root}assets/experience.js"></script></body></html>'''
 
 def section_header(n,k,title,desc=''):
  return f'<div class="eyebrow">// {n} {esc(k)}</div><h2>{esc(title)}</h2>'+ (f'<p class="muted intro">{esc(desc)}</p>' if desc else '')
@@ -92,6 +94,7 @@ def project_cards():
  return x
 hero=f'''<section class="hero container"><canvas id="cyber-world" aria-hidden="true"></canvas><div class="hero-copy"><div class="cmd">$ whoami</div><h1>Detection engineering, documented as I build it<span class="cursor">_</span></h1><p>CS student at Rutgers building detection tooling, a web security scanner, and a homelab. Every project gets a case file: what I built, what broke, and what I would change.</p><div class="buttons"><a class="button primary" href="{latest_href}">open latest case file</a><a class="button outline" href="projects.html">ls projects/</a></div></div>{status}</section>'''
 home=hero+f'''<section class="band" id="writeups"><div class="container pad">{section_header('01','writeups','What I built, what broke')}<div class="entries">{entries}</div><p class="bottom-link"><a href="journal.html">view all journal entries →</a></p></div></section><section id="projects"><div class="container pad">{section_header('02','projects','Things that run')}<div class="cards">{project_cards()}</div></div></section><section class="band" id="roadmap"><div class="container pad">{section_header('03','roadmap','Where this is going','A plan, not a promise. Updated when something changes.')}<div class="steps"><div><b>PHASE 01 · NOW</b><h3>Fundamentals and first tools</h3><p>Security+ prep, hands-on detection experiments, and regular case files.</p></div><div><b>PHASE 02 · SPRING 2027</b><h3>Graduate, then Per Scholas</h3><p>Finish the CS degree at Rutgers and start the Per Scholas program.</p></div><div><b>PHASE 03 · THE THREAD</b><h3>AI and LLM security</h3><p>Prompt injection, LLM red-teaming, securing ML pipelines. One case file in every few.</p></div></div></div></section><section id="about"><div class="container pad about-mini">{section_header('04','about',"Hi, I'm Divy.")}<p>I'm a CS student at Rutgers. I'm working on detection engineering, cybersecurity tools, and practical software projects. This site documents what I learn, what breaks, and what I change along the way. <a href="about.html">More about me →</a></p></div></section>''' 
+(OUT/'index.html').write_text(layout('Home',home,active='index'),encoding='utf8')
 all_entries=''.join(postrow(p) for p in posts) or '<p class="muted">Your posts will appear here once you add one.</p>'
 journal=f'''<section class="container page-head"><div class="eyebrow">// JOURNAL / THE PUBLIC LOG</div><h1>Everything I learn, <span class="gold">as it happens.</span></h1><p>Progress reports, technical notes, personal reflections, mistakes, and small wins. Chronological and written in my own words.</p><div class="terminal-note">$ ls -lt posts/ <span class="faint">// {len(posts)} published entries</span></div></section><section class="container journal-list"><div class="entries">{all_entries}</div></section>'''
 (OUT/'journal.html').write_text(layout('Journal',journal,active='journal'),encoding='utf8')
@@ -106,9 +109,6 @@ for p in posts:
  article=f'''<section class="article container"><a class="back" href="../journal.html">← cd ../journal</a><div class="eyebrow">LOG / {esc(p['category'] if 'category' in p else 'journal')} / {esc(p['date'])}</div><h1>{esc(p['title'])}</h1><p class="article-summary">{esc(p.get('summary',''))}</p><div class="article-meta"><span>published: {esc(p['date'])}</span><span>category: {esc(p.get('category','journal'))}</span></div><div class="prose">{markdown(p['body'])}</div><div class="article-end"><a href="../journal.html">← all entries</a><a href="../projects.html">projects →</a></div></section>'''
  (OUT/'journal'/f'{p["slug"]}.html').write_text(layout(p['title'],article,root='../',active='journal'),encoding='utf8')
 (OUT/'assets').mkdir(exist_ok=True)
+shutil.copy(ROOT/'assets'/'style.css',OUT/'assets'/'style.css')
 shutil.copy(ROOT/'assets'/'experience.js',OUT/'assets'/'experience.js')
-shutil.copy(
-    ROOT / 'assets' / 'experience.js',
-    OUT / 'assets' / 'experience.js'
-)
 print(f'Built {len(posts)} posts into {OUT}')
