@@ -1,0 +1,5 @@
+{
+  "files.exclude": {
+    " {   \"files.exclude\": {     \"**/__pycache__\": true,     \"**/.DS_Store\": true,     \"site\": true,     \"/index.html\": true,     \"/about.html\": true,     \"/journal.html\": true,     \"/projects.html\": true,     \"/detections.html\": true,     \"/style (1).css\": true,     \"/pages.yml\": true,     \"/2026-10-24-why-i-am-building-in-public.html\": true   } }": true
+  }
+}
