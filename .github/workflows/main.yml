@@ -24,7 +24,15 @@ jobs:
       - name: Build
         run: python build.py
       - name: Verify generated site
-        run: test -s site/index.html && test -s site/assets/style.css && test -s site/assets/experience.js
+        run: >-
+          test -s site/index.html &&
+          test -s site/journal.html &&
+          test -s site/projects.html &&
+          test -s site/about.html &&
+          test -s site/detections.html &&
+          test -n "$(find site/journal -maxdepth 1 -type f -name '*.html' -print -quit)" &&
+          test -s site/assets/style.css &&
+          test -s site/assets/experience.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

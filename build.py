@@ -85,7 +85,7 @@ latest_href='journal/'+latest['slug']+'.html' if latest else 'journal.html'
 latest_name=latest['title'] if latest else 'First entry coming soon'
 entries=''.join(postrow(p) for p in posts[:4]) or '<p class="muted">No published posts yet. Add a Markdown file to posts/ and run build.py.</p>'
 status='''<aside class="status"><div class="panel-head"><span class="green-dot"></span> status.log <span class="panel-x">— □ ×</span></div><div class="status-body"><div><span class="key">building</span><strong>OVERR1DE security scanner</strong></div><div><span class="key">studying</span><strong>CompTIA Security+ (SY0-701)</strong></div><div><span class="key">latest case file</span><strong>Public learning journal</strong></div><div><span class="key">latest entry</span><a href="'''+latest_href+'''">'''+esc(latest_name)+''' ↗</a></div></div></aside>'''
-projects=[('01','OVERR1DE','Security scanner and dashboard project. Building security tooling and documenting development decisions.','https://theoverr1de.com/','building'),('02','UIProbe','Compare Figma designs with live websites and investigate visual differences.','https://uiprobe.vercel.app/','building'),('03','Detection engineering lab','A place for Windows logs, alert logic, detection rules and experiments as they are completed.','','learning')]
+projects=[('01','OVERR1DE','Security scanner and dashboard project. Building security tooling and documenting development decisions.','https://theoverr1de.com/','building'),('02','Detection engineering lab','A place for Windows logs, alert logic, detection rules and experiments as they are completed.','','learning')]
 def project_cards():
  x=''
  for n,name,desc,url,status in projects:
